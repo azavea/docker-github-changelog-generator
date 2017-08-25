@@ -1,0 +1,13 @@
+FROM ruby:2
+
+RUN set -ex \
+	&& mkdir -p /opt/changelog-generator \
+	&& wget -qO- https://github.com/azavea/github-changelog-generator/archive/%%GCG_VERSION%%-azavea.tar.gz | \
+	   tar --strip-components=1 -xzC /opt/changelog-generator \
+ 	&& cd /opt/changelog-generator \
+ 	&& gem install -N bundler \
+ 	&& bundle install \
+ 	&& gem build github_changelog_generator \
+ 	&& gem install -N *.gem
+
+ENTRYPOINT ["github_changelog_generator"]
